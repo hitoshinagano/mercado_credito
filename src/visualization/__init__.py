@@ -1,1 +1,3 @@
-/Users/hitoshi/Library/Mobile Documents/com~apple~CloudDocs/Documents/IBRE/mercado_credito/src/visualization/__init__.py
+from .scr_visualizacoes import (create_uf_plot, 
+                                create_uf_modalidade_plot, 
+                                formatar_scr_para_plot)
