@@ -150,6 +150,125 @@ def insert_newline(modalidade):
     else:
         return modalidade
 
+# def old_create_uf_plot(df, uf, col_map, title, division=None):
+    
+#     df_copy = df.copy()
+        
+#     # Map the columns
+#     date_col = col_map['date']
+#     uf_col = col_map['uf']
+#     modalidade_col = col_map['modalidade']
+#     value_cols = col_map['value']
+
+#     if division == None:
+#         divisor = 1
+#     elif division == 'milhão':
+#         divisor = 1e6
+#     elif division == 'bilhão':
+#         divisor = 1e9
+#     elif division == 'trilhão':
+#         divisor = 1e12
+#     else:
+#         print('Divisor não reconhecido. Utilizando 1')
+#         divisor = 1
+#     for value_col in value_cols:
+#         df_copy[value_col] = df_copy[value_col] / divisor
+        
+#     # Update the modalidade labels
+#     df_copy[modalidade_col] = df_copy[modalidade_col].apply(insert_newline)
+    
+#     # Get unique modalidades
+#     unique_modalidades = df_copy[modalidade_col].unique()
+#     # Define a list of colors
+#     color_list = ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#FF97FF', '#FECB52']
+#     # Build the colors dictionary
+#     colors = {modalidade: color_list[i % len(color_list)] for i, modalidade in enumerate(unique_modalidades)}
+
+#     # Create a subplot with a row for each 'uf'
+#     fig = make_subplots(rows=3, 
+#                         cols=1, 
+#                         shared_xaxes=True, 
+#                         subplot_titles=['', 'Carteira Ativa', 'Carteira Inadimplida Arrastada'],
+#                         vertical_spacing=0.05,
+#                         row_heights=[0.5, 0.25, 0.25])
+
+#     df_uf = df_copy[df_copy[uf_col] == uf]
+    
+#     # Add traces for each 'uf'
+#     for modalidade in unique_modalidades:
+#         df_modalidade = df_uf[df_uf[modalidade_col] == modalidade]
+#         fig.add_trace(
+#             go.Scatter(
+#                 x=df_modalidade[date_col],
+#                 y=df_modalidade['inadimplencia'],
+#                 mode='lines+markers',
+#                 name=modalidade,
+#                 marker_color=colors[modalidade],
+#                 showlegend=False,
+#                 legendgroup=modalidade,  # Group by modalidade
+#             ), 
+#             row=1, col=1
+#         )
+#         for i, value_col in enumerate(value_cols):
+#         # for modalidade in unique_modalidades:
+#             fig.add_trace(
+#                 go.Bar(
+#                     x=df_modalidade[date_col],
+#                     y=df_modalidade[value_col],
+#                     name=insert_newline(modalidade),
+#                     marker_color=colors[modalidade],
+#                     showlegend=(i == 0),  # Show legend only once
+#                     legendgroup=modalidade,  # Group by modalidade
+#                     # offsetgroup=modalidade
+#                 ),
+#                 row=i+2, col=1
+#             )
+            
+#     # Update layout for stacked bars
+#     fig.update_layout(
+#         barmode='stack',
+#         height=800,  # Adjust the height of the figure
+#         yaxis_title='Inadimplência (%)',
+#         yaxis2_title=f'Valor ({division} R$)',
+#         yaxis3_title=f'Valor ({division} R$)',
+#         title='Inadimplencia e Carteiras por Modalidade',
+#         legend_title_text='Modalidade',
+#         legend=dict(
+#             font=dict(size=10),
+#             itemwidth=30,
+#             yanchor='top',
+#             xanchor='left',
+#             x=1.02,
+#             y=1,
+#             bgcolor='rgba(255,255,255,0)',
+#             # bordercolor='rgba(0,0,0,0.2)',
+#             # borderwidth=1
+#             tracegroupgap=0  # Adjust the item spacing
+#         )
+        
+#     )
+    
+#     for a in fig.layout.annotations:
+#         # a['y'] = a['y'] - 0.05
+#         a['x'] = 0.02
+#         a['font'] = {'size': 12}
+#         a['xanchor'] = 'left'
+    
+#     # Ensure x-axis titles are below the respective subplots
+#     fig.update_xaxes(title_text=date_col, row=3, col=1)
+#     fig.update_xaxes(tickangle=-45, row=3, col=1)
+    
+#     # Align y-axis titles
+#     fig.update_layout(yaxis_title_standoff=25)
+#     fig.update_layout(yaxis2_title_standoff=25)
+#     fig.update_layout(yaxis3_title_standoff=25)
+    
+#     # Share y-axis title between subplots in rows 2 and 3
+#     # fig.update_yaxes(title_text="Shared Y-axis Title", row=2, col=1)
+#     # fig.update_yaxes(title_text="", row=3, col=1)
+    
+#     return fig
+
 def create_uf_plot(df, uf, col_map, title, division=None):
     
     df_copy = df.copy()
@@ -157,7 +276,7 @@ def create_uf_plot(df, uf, col_map, title, division=None):
     # Map the columns
     date_col = col_map['date']
     uf_col = col_map['uf']
-    modalidade_col = col_map['modalidade']
+    recorte_col = col_map['recorte']
     value_cols = col_map['value']
 
     if division == None:
@@ -175,14 +294,14 @@ def create_uf_plot(df, uf, col_map, title, division=None):
         df_copy[value_col] = df_copy[value_col] / divisor
         
     # Update the modalidade labels
-    df_copy[modalidade_col] = df_copy[modalidade_col].apply(insert_newline)
+    df_copy[recorte_col] = df_copy[recorte_col].apply(insert_newline)
     
-    # Get unique modalidades
-    unique_modalidades = df_copy[modalidade_col].unique()
+    # Get unique recortes
+    unique_recortes = df_copy[recorte_col].unique()
     # Define a list of colors
     color_list = ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#FF97FF', '#FECB52']
     # Build the colors dictionary
-    colors = {modalidade: color_list[i % len(color_list)] for i, modalidade in enumerate(unique_modalidades)}
+    colors = {r: color_list[i % len(color_list)] for i, r in enumerate(unique_recortes)}
 
     # Create a subplot with a row for each 'uf'
     fig = make_subplots(rows=3, 
@@ -195,17 +314,17 @@ def create_uf_plot(df, uf, col_map, title, division=None):
     df_uf = df_copy[df_copy[uf_col] == uf]
     
     # Add traces for each 'uf'
-    for modalidade in unique_modalidades:
-        df_modalidade = df_uf[df_uf[modalidade_col] == modalidade]
+    for recorte in unique_recortes:
+        df_recorte = df_uf[df_uf[recorte_col] == recorte]
         fig.add_trace(
             go.Scatter(
-                x=df_modalidade[date_col],
-                y=df_modalidade['inadimplencia'],
+                x=df_recorte[date_col],
+                y=df_recorte['inadimplencia'],
                 mode='lines+markers',
-                name=modalidade,
-                marker_color=colors[modalidade],
+                name=recorte,
+                marker_color=colors[recorte],
                 showlegend=False,
-                legendgroup=modalidade,  # Group by modalidade
+                legendgroup=recorte,  # Group by recorte
             ), 
             row=1, col=1
         )
@@ -213,13 +332,13 @@ def create_uf_plot(df, uf, col_map, title, division=None):
         # for modalidade in unique_modalidades:
             fig.add_trace(
                 go.Bar(
-                    x=df_modalidade[date_col],
-                    y=df_modalidade[value_col],
-                    name=insert_newline(modalidade),
-                    marker_color=colors[modalidade],
+                    x=df_recorte[date_col],
+                    y=df_recorte[value_col],
+                    name=insert_newline(recorte),
+                    marker_color=colors[recorte],
                     showlegend=(i == 0),  # Show legend only once
-                    legendgroup=modalidade,  # Group by modalidade
-                    # offsetgroup=modalidade
+                    legendgroup=recorte,  # Group by recorte
+                    # offsetgroup=recorte
                 ),
                 row=i+2, col=1
             )
@@ -231,8 +350,8 @@ def create_uf_plot(df, uf, col_map, title, division=None):
         yaxis_title='Inadimplência (%)',
         yaxis2_title=f'Valor ({division} R$)',
         yaxis3_title=f'Valor ({division} R$)',
-        title='Inadimplencia e Carteiras por Modalidade',
-        legend_title_text='Modalidade',
+        title=f'Inadimplencia e Carteiras por {recorte}',
+        legend_title_text=recorte.capitalize(),
         legend=dict(
             font=dict(size=10),
             itemwidth=30,
@@ -270,6 +389,7 @@ def create_uf_plot(df, uf, col_map, title, division=None):
     return fig
 
 
+
 def get_top_ufs(df, value_col, n_top_UFs, drop_BR):
     """Retorna as UFs com os maiores valores totais de uma coluna do SCR: 'carteira ativa'
     """
@@ -283,7 +403,7 @@ def get_top_ufs(df, value_col, n_top_UFs, drop_BR):
     return top_ufs
 
 @st.cache_data
-def formatar_scr_para_plot(df, value_cols, **kwargs):
+def formatar_scr_para_plot(df, recorte, value_cols, **kwargs):
     """Formata o dataframe do SCR para plotar no gráfico de barras.
     
     Args:
@@ -294,16 +414,18 @@ def formatar_scr_para_plot(df, value_cols, **kwargs):
     Returns:
     * df_combined: dataframe com os dados formatados para plotar no gráfico de barras
     """
+    df_recorte = df[recorte]
+    
     if isinstance(value_cols, str):
         value_cols = [value_cols]
         
-    top_ufs = get_top_ufs(df, 'carteira ativa', kwargs.get('n_top_UFs', 5), kwargs.get('drop_BR', False))
+    top_ufs = get_top_ufs(df_recorte, 'carteira ativa', kwargs.get('n_top_UFs', 5), kwargs.get('drop_BR', False))
     kwargs.pop('n_top_UFs', None)
     kwargs.pop('criar_inadimplencia', None)
     
     df_combined = list()
     for value_col in value_cols:
-        df_value = _formatar_scr_para_plot_single(df, value_col, top_ufs, **kwargs)
+        df_value = _formatar_scr_para_plot_single(df_recorte, recorte, value_col, top_ufs, **kwargs)
         df_combined.append(df_value)
         
     df_combined = pd.concat(df_combined, axis=1)
@@ -315,7 +437,9 @@ def formatar_scr_para_plot(df, value_cols, **kwargs):
     
     return df_combined
     
-def _formatar_scr_para_plot_single(df, value_col, 
+def _formatar_scr_para_plot_single(df,
+                                   recorte, 
+                                   value_col, 
                                    top_ufs, 
                                    periodicidade='trimestre', trimestre_incompleto_drop = False, 
                                    drop_BR=False, renomear_modalidades_para_siglas=False):
@@ -355,7 +479,7 @@ def _formatar_scr_para_plot_single(df, value_col,
         df_period = value.loc[[period]].T
 
         df_top = df_period.loc[df_period.index.get_level_values('uf').isin(top_ufs)]
-        df_other = df_period.loc[~df_period.index.get_level_values('uf').isin(top_ufs)].groupby(level='modalidade').sum()
+        df_other = df_period.loc[~df_period.index.get_level_values('uf').isin(top_ufs)].groupby(level=recorte).sum()
         df_other.index = pd.MultiIndex.from_product([['demais UFs'], df_other.index])
         
         # Combine the top ufs and the 'other states' aggregated data
@@ -366,7 +490,8 @@ def _formatar_scr_para_plot_single(df, value_col,
     
     df_combined = df_combined.stack(level=[0, 1], future_stack=True)#.reset_index()
     df_combined.name = value_col
-    df_combined.index.names = [periodicidade, 'uf', 'modalidade']
+    # df_combined.index.names = [periodicidade, 'uf', 'modalidade']
+    df_combined.index.names = [periodicidade] + list(value.columns.names)
 
     # # ordenando as UFs pelo volume em todo o periodo
     # uf_order = df_combined.groupby('uf')[value_col].sum().sort_values(ascending=False).index
@@ -375,3 +500,22 @@ def _formatar_scr_para_plot_single(df, value_col,
     # uf_order
     
     return df_combined
+
+def adaptar_tupla_porte_scr(df):
+    
+    if isinstance(df.columns.levels[-1][0], tuple):
+        df.columns = df.columns.set_levels(df.columns.levels[-1].map(str), level=-1)
+
+    codigo_porte_scr_orig = {
+        '(-1, -1)': 'PF - Indisponível',
+        '(0, 0)': 'PF - Sem rendimento',
+        '(0, 1)': 'PF - Até 1 salário mínimo',
+        '(1, 2)': 'PF - Mais de 1 a 2 salários mínimos',
+        '(2, 3)': 'PF - Mais de 2 a 3 salários mínimos',
+        '(3, 5)': 'PF - Mais de 3 a 5 salários mínimos',
+        '(5, 10)': 'PF - Mais de 5 a 10 salários mínimos',
+        '(10, 20)': 'PF - Mais de 10 a 20 salários mínimos',
+        '(20, inf)': 'PF - Acima de 20 salários mínimos'
+    }
+
+    df.columns = df.columns.set_levels(df.columns.levels[-1].map(codigo_porte_scr_orig), level=-1)
