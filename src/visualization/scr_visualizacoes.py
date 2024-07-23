@@ -269,6 +269,7 @@ def insert_newline(modalidade):
     
 #     return fig
 
+@st.cache_data
 def create_uf_plot(df, uf, col_map, title, division=None):
     
     df_copy = df.copy()
@@ -278,6 +279,12 @@ def create_uf_plot(df, uf, col_map, title, division=None):
     uf_col = col_map['uf']
     recorte_col = col_map['recorte']
     value_cols = col_map['value']
+    
+    recorte_map_inv = {
+        'modalidade': 'modalidade',
+        'ocupacao': 'ocupação',
+        'porte_scr': 'porte'
+    }
 
     if division == None:
         divisor = 1
@@ -350,7 +357,7 @@ def create_uf_plot(df, uf, col_map, title, division=None):
         yaxis_title='Inadimplência (%)',
         yaxis2_title=f'Valor ({division} R$)',
         yaxis3_title=f'Valor ({division} R$)',
-        title=f'Inadimplencia e Carteiras por {recorte}',
+        title=f'Inadimplencia e Carteiras por {recorte_map_inv[recorte_col]}',
         legend_title_text=recorte.capitalize(),
         legend=dict(
             font=dict(size=10),

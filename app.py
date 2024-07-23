@@ -47,13 +47,13 @@ st.title("Evolução do Saldo de Carteira e Ativos Problemáticos")
 st.sidebar.header("Menu de Seleções")
 aggregation = st.sidebar.selectbox("Selecionar Agregação", ['trimestre', 'ano_mes'])
 
-recorte_options = {
+recorte_map = {
     'modalidade': 'modalidade',
     'ocupação': 'ocupacao',
     'porte': 'porte_scr'
 }
-opcao_selecionada = st.sidebar.selectbox("Selecionar Recorte"  , list(recorte_options.keys()))
-recorte = recorte_options[opcao_selecionada]
+opcao_selecionada = st.sidebar.selectbox("Selecionar Recorte"  , list(recorte_map.keys()))
+recorte = recorte_map[opcao_selecionada]
 
 # Format data based on user selection
 scr_plot = formatar_scr_para_plot(df=scr_inadimplencia, 
