@@ -409,7 +409,7 @@ def get_top_ufs(df, value_col, n_top_UFs, drop_BR):
     
     return top_ufs
 
-@st.cache_data
+# @st.cache_data
 def formatar_scr_para_plot(df, recorte, value_cols, **kwargs):
     """Formata o dataframe do SCR para plotar no gráfico de barras.
     
