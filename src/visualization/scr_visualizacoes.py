@@ -514,14 +514,15 @@ def adaptar_tupla_porte_scr(df):
         df.columns = df.columns.set_levels(df.columns.levels[-1].map(str), level=-1)
 
     codigo_porte_scr_orig = {
-        '(-1, -1)': 'PF - Indisponível',
-        '(0, 0)': 'PF - Sem rendimento',
-        '(0, 1)': 'PF - Até 1 salário mínimo',
-        '(1, 2)': 'PF - Mais de 1 a 2 salários mínimos',
-        '(2, 3)': 'PF - Mais de 2 a 3 salários mínimos',
-        '(3, 5)': 'PF - Mais de 3 a 5 salários mínimos',
-        '(5, 10)': 'PF - Mais de 5 a 10 salários mínimos',
-        '(10, 20)': 'PF - Mais de 10 a 20 salários mínimos',
+        '(-1, -1)' : 'PF - Indisponível',
+        '(0, 0)'   : 'PF - Sem rendimento',
+        '(-1, 0)'  : 'PF - Indisponível ou sem rendimento',
+        '(0, 1)'   : 'PF - Até 1 salário mínimo',
+        '(1, 2)'   : 'PF - Mais de 1 a 2 salários mínimos',
+        '(2, 3)'   : 'PF - Mais de 2 a 3 salários mínimos',
+        '(3, 5)'   : 'PF - Mais de 3 a 5 salários mínimos',
+        '(5, 10)'  : 'PF - Mais de 5 a 10 salários mínimos',
+        '(10, 20)' : 'PF - Mais de 10 a 20 salários mínimos',
         '(20, inf)': 'PF - Acima de 20 salários mínimos'
     }
 
